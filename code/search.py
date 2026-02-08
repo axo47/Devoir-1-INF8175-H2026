@@ -153,7 +153,7 @@ def uniformCostSearch(problem:SearchProblem)->List[Direction]:
     """Search the node of least total cost first."""
     s = problem.getStartState()
     L = util.PriorityQueue()
-    L.push((s,[]), 0)
+    L.push((s,[],0), 0)
     visited = set()
 
     while not L.isEmpty(): 
@@ -171,7 +171,8 @@ def uniformCostSearch(problem:SearchProblem)->List[Direction]:
             for neighbour in C:
                 if neighbour[0] not in visited:
                     goal = s[1] + [neighbour[1]]
-                    L.push((neighbour[0], goal), neighbour[2])
+                    newCost = neighbour[2]+ s[2]
+                    L.push((neighbour[0], goal, newCost),newCost  )
     util.raiseNotDefined()
 
 def nullHeuristic(state:GameState, problem:SearchProblem=None)->List[Direction]:
@@ -185,7 +186,8 @@ def aStarSearch(problem:SearchProblem, heuristic=nullHeuristic)->List[Direction]
     """Search the node that has the lowest combined cost and heuristic first."""
     s = problem.getStartState()
     L = util.PriorityQueue()
-    L.push((s,[]), 0 + heuristic(s,problem))
+    cost = 0 + heuristic(s,problem)
+    L.push((s,[], 0), cost)
     visited = set()
 
     while not L.isEmpty(): 
@@ -203,7 +205,8 @@ def aStarSearch(problem:SearchProblem, heuristic=nullHeuristic)->List[Direction]
             for neighbour in C:
                 if neighbour[0] not in visited:
                     goal = s[1] + [neighbour[1]]
-                    L.push((neighbour[0], goal), neighbour[2] + heuristic(s[0],problem))
+                    new_cost = neighbour[2] + s[2]
+                    L.push((neighbour[0], goal,new_cost),new_cost + heuristic(neighbour[0],problem))
     util.raiseNotDefined()
 
 

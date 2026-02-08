@@ -58,6 +58,9 @@ class SearchProblem:
         state, 'action' is the action required to get there, and 'stepCost' is
         the incremental cost of expanding to that successor.
         """
+        successors = []
+
+        
         util.raiseNotDefined()
 
     def getCostOfActions(self, actions:List[Direction])->int:
@@ -96,31 +99,79 @@ def depthFirstSearch(problem:SearchProblem)->List[Direction]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
 
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 1 ICI
-    '''
+    s = problem.getStartState()
+    L = util.Stack()
+    L.push((s,[]))
+    visited = set()
+
+    while not L.isEmpty(): 
+        s = L.pop()
+
+        if s[0] in visited:
+            continue
+
+        visited.add(s[0])
+
+        if problem.isGoalState(s[0]) :
+            return s[1]
+        else : 
+            C = problem.getSuccessors(s[0])
+            for neighbour in C:
+                if neighbour[0] not in visited:
+                    goal = s[1] + [neighbour[1]]
+                    L.push((neighbour[0], goal))
 
     util.raiseNotDefined()
 
 
 def breadthFirstSearch(problem:SearchProblem)->List[Direction]:
     """Search the shallowest nodes in the search tree first."""
+    s = problem.getStartState()
+    L = util.Queue()
+    L.push((s,[]))
+    visited = set()
 
+    while not L.isEmpty(): 
+        s = L.pop()
 
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 2 ICI
-    '''
+        if s[0] in visited:
+            continue
 
+        visited.add(s[0])
+
+        if problem.isGoalState(s[0]) :
+            return s[1]
+        else : 
+            C = problem.getSuccessors(s[0])
+            for neighbour in C:
+                if neighbour[0] not in visited:
+                    goal = s[1] + [neighbour[1]]
+                    L.push((neighbour[0], goal))
     util.raiseNotDefined()
 
 def uniformCostSearch(problem:SearchProblem)->List[Direction]:
     """Search the node of least total cost first."""
+    s = problem.getStartState()
+    L = util.PriorityQueue()
+    L.push((s,[]), 0)
+    visited = set()
 
+    while not L.isEmpty(): 
+        s = L.pop()
 
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 3 ICI
-    '''
+        if s[0] in visited:
+            continue
 
+        visited.add(s[0])
+
+        if problem.isGoalState(s[0]) :
+            return s[1]
+        else : 
+            C = problem.getSuccessors(s[0])
+            for neighbour in C:
+                if neighbour[0] not in visited:
+                    goal = s[1] + [neighbour[1]]
+                    L.push((neighbour[0], goal), neighbour[2])
     util.raiseNotDefined()
 
 def nullHeuristic(state:GameState, problem:SearchProblem=None)->List[Direction]:
@@ -132,10 +183,27 @@ def nullHeuristic(state:GameState, problem:SearchProblem=None)->List[Direction]:
 
 def aStarSearch(problem:SearchProblem, heuristic=nullHeuristic)->List[Direction]:
     """Search the node that has the lowest combined cost and heuristic first."""
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 4 ICI
-    '''
+    s = problem.getStartState()
+    L = util.PriorityQueue()
+    L.push((s,[]), 0 + heuristic(s,problem))
+    visited = set()
 
+    while not L.isEmpty(): 
+        s = L.pop()
+
+        if s[0] in visited:
+            continue
+
+        visited.add(s[0])
+
+        if problem.isGoalState(s[0]) :
+            return s[1]
+        else : 
+            C = problem.getSuccessors(s[0])
+            for neighbour in C:
+                if neighbour[0] not in visited:
+                    goal = s[1] + [neighbour[1]]
+                    L.push((neighbour[0], goal), neighbour[2] + heuristic(s[0],problem))
     util.raiseNotDefined()
 
 

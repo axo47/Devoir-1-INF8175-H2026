@@ -451,6 +451,11 @@ class AStarFoodSearchAgent(SearchAgent):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
 
+
+# Claude help me to think about the heuristic.
+# He give me the idea of BFS in the heuristic.
+# I retake a bit what we did in the TP for the implementation (question 2)
+# I tried before MaxSpread + minDist it was a faillure (22/23)
 def foodHeuristic(state, problem: FoodSearchProblem):
     """
     Your heuristic for the FoodSearchProblem goes here.
@@ -480,11 +485,35 @@ def foodHeuristic(state, problem: FoodSearchProblem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-
-    '''
-        INSÉREZ VOTRE SOLUTION À LA QUESTION 7 ICI
-    '''
-
-
-    return 0
+    listFoodGrid = foodGrid.asList()
+    actions_neighbour = [(0,1), (0,-1), (1,0), (-1,0)]
+    
+    if len(listFoodGrid) == 0:
+        return 0
+    
+    distances = {}
+    L = util.Queue()
+    L.push((position, 0))
+    visited = set()
+    
+    while not L.isEmpty():
+        pos, dist = L.pop()
+        
+        if pos in visited:
+            continue
+        visited.add(pos)
+        
+        if pos in listFoodGrid:
+            distances[pos] = dist
+            ### the objectif : To have all distance 
+            if len(distances) == len(listFoodGrid):
+                break
+        
+        # Check the neighbour if they are walls or not.
+        for action in actions_neighbour:
+            next_pos = (pos[0] + action[0], pos[1] + action[1])
+            if not problem.walls[next_pos[0]][next_pos[1]]:
+                L.push((next_pos, dist + 1))
+    
+    return max(distances.values())
 
